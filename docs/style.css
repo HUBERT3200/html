@@ -80,6 +80,7 @@ iframe { width: 100%;}
 
 footer {
     height: 40px;
+    text-decoration: none;
     background-color: darkcyan;
     color: white;
     line-height: 40pxs;
