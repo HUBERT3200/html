@@ -55,7 +55,7 @@ window.addEventListener('load', () => {
     function setDefault() {
         snake = [{ x: 10, y: 10 }];
         [move, nextMove] = Array(2).fill({ x: 0, y: 0 });
-        points = 2;
+        points = 1;
         running = false;
         apple = generateAppleLocation();
     }
