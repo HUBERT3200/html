@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+
+    <title>GRY - SKOKI</title>
+
+    <link rel="shortcut icon" href="../../picture/favicon.ico" type="image/x-icon">
+
+</head>
+
+<body>
+    <script>
+        //STAŁE
+        
+        var CANVAS_WIDTH = 800;
+        var NANONAUT_WIDTH = 120;
+
+        var nanonautX = CANVAS_WIDTH - NANONAUT_WIDTH;
+
+        var CANVAS_WIDTH = 800;
+        var CANVAS_HEIGHT = 600;
+        var NANONAUT_WIDTH = 181;
+        var NANONAUT_HEIGHT = 229;
+        var GROUND_Y = 540;
+        var NANONAUT_Y_ACCELERATION = 1;
+        var SPACE_KEYCODE = 32;
+        var NANONAUT_JUMP_SPEED = 20;
+        var NANONAUT_X_SPEED = 5;
+        var BACKGROUND_WIDTH = 1000;
+        var NANONAUT_NR_FRAMES_PER_ROW = 5;
+        var NANONAUT_NR_ANIMATION_FRAMERS = 7;
+        
+        //KONFIGURACJA WSTĘPNA
+
+        var canvas = document.createElement('canvas');
+        var c = canvas.getContext('2d');
+        canvas.width = CANVAS_WIDTH;
+        canvas.height = CANVAS_HEIGHT;
+        document.body.appendChild(canvas);
+
+        var nanonautImage = new Image();
+        nanonautImage.src = 'Nanonaut.png';
+
+        var backgroundImage = new Image();
+	    backgroundImage.src = 'background.png';
+
+        var nanonautX = CANVAS_WIDTH / 2;
+        var nanonautY = GROUND_Y - NANONAUT_HEIGHT;
+        var nanonautYSpeed = 0;
+        var nanonautIsInTheAir = false;
+        var spaceKeyIsPressed = false;
+        var nanonautFramerNr = 0;
+
+        window.addEventListener('keydown', onKeyDown);
+
+        window.addEventListener('keyup', onKeyUp);
+
+        window.addEventListener('load', start);
+
+        function start() {
+            window.requestAnimationFrame(mainLoop);
+        }
+
+        //PĘTLA GŁÓWNA
+
+        function mainLoop() {
+            update();
+            draw();
+            window.requestAnimationFrame(mainLoop); 
+        }
+
+        //STEROWANIE
+
+        function onKeyDown(event) {
+            if (event.keyCode === SPACE_KEYCODE) {
+                spaceKeyIsPressed = true;
+            }
+        }
+        function onKeyUp(event) {
+            if (event.keyCode === SPACE_KEYCODE) {
+                spaceKeyIsPressed = false;
+            }
+        }
+
+        //AKTUALIZACJA
+
+        function update() {
+            nanonautX = nanonautX + NANONAUT_X_SPEED
+            if (spaceKeyIsPressed && !nanonautIsInTheAir) {
+                nanonautYSpeed = -NANONAUT_JUMP_SPEED;
+                nanonautIsInTheAir = true;
+            }
+            //ZAKTUALIZUJ NANOUTĘ
+            nanonautY = nanonautY + nanonautYSpeed;
+            nanonautYSpeed = nanonautYSpeed + NANONAUT_Y_ACCELERATION;
+            if (nanonautY > (GROUND_Y - NANONAUT_HEIGHT)) {
+                nanonautY = GROUND_Y - NANONAUT_HEIGHT;
+                nanonautYSpeed = 0;
+                nanonautIsInTheAir = false;
+            }
+            //AKTUALIZACJA KAMERY
+            cameraX = nanonautX - 150
+        }
+
+        //PYSOWANIE
+
+        function draw() {
+            c.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+
+            //NARYSUJ NIEBO
+            c.fillStyle = 'LightSkyBlue'
+            c.fillRect(0, 0, CANVAS_WIDTH, GROUND_Y - 40);
+
+            //NARYSUJ TŁO
+            var backgroundX = - (cameraX % BACKGROUND_WIDTH);
+            c.drawImage(backgroundImage, backgroundX, -210);
+            c.drawImage(backgroundImage, backgroundX + BACKGROUND_WIDTH, -210)
+
+            //NARYSUJ ZIEMIE
+            c.fillStyle = 'ForestGreen'
+            c.fillRect(0, GROUND_Y - 40, CANVAS_WIDTH, CANVAS_HEIGHT - GROUND_Y + 40);
+
+            //NARYSUJ NANOUTĘ
+            c.drawImage(nanonautImage, nanonautX - cameraX, nanonautY);
+        }
+        
+    </script>
+</body>
+
+</html>
